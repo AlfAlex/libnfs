@@ -137,8 +137,8 @@ struct accepted_reply {
 	uint32_t		ar_stat;
 	union {
 		struct {
-			u_long	low;
-			u_long	high;
+			uint32_t	low;
+			uint32_t	high;
 		} AR_versions;
 		struct {
 			caddr_t	where;
@@ -246,6 +246,15 @@ bool_t libnfs_xdr_callmsg(XDR *xdrs, struct rpc_msg *msg);
 
 #define xdr_replymsg libnfs_xdr_replymsg
 bool_t libnfs_xdr_replymsg(XDR *xdrs, struct rpc_msg *msg);
+
+#define authnone_create libnfs_authnone_create
+AUTH *libnfs_authnone_create(void);
+
+#define authunix_create libnfs_authunix_create
+AUTH *libnfs_authunix_create(char *host, uint32_t uid, uint32_t gid, uint32_t len, uint32_t *groups);
+
+#define authunix_create_default libnfs_authunix_create_default
+AUTH *libnfs_authunix_create_default(void);
 
 #define auth_destroy libnfs_auth_destroy
 void libnfs_auth_destroy(AUTH *auth);

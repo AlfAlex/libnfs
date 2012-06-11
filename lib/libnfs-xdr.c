@@ -266,7 +266,78 @@ bool_t libnfs_xdr_replymsg(XDR *xdrs, struct rpc_msg *msg)
 	return libnfs_rpc_msg(xdrs, msg);
 }
 
+AUTH *authnone_create(void)
+{
+	AUTH *auth;
+
+	auth = malloc(sizeof(AUTH));
+
+	auth->ah_cred.oa_flavor = AUTH_NONE;
+	auth->ah_cred.oa_length = 0;
+	auth->ah_cred.oa_base = NULL;
+
+	auth->ah_verf.oa_flavor = AUTH_NONE;
+	auth->ah_verf.oa_length = 0;
+	auth->ah_verf.oa_base = NULL;
+
+	auth->ah_private = NULL;
+
+	return auth;
+}
+
+AUTH *libnfs_authunix_create(char *host, uint32_t uid, uint32_t gid, uint32_t len, uint32_t *groups)
+{
+return authnone_create();
+#if 0
+	AUTH *auth;
+	int size;
+	uint32_t *buf;
+	int idx;
+
+	size = 4 + 4 + ((strlen(host) + 3) & ~3) + 4 + 4 + 4 + len * 4;
+	auth = malloc(sizeof(AUTH));
+	auth->ah_cred.oa_flavor = AUTH_UNIX;
+	auth->ah_cred.oa_length = size;
+	auth->ah_cred.oa_base = malloc(size);
+
+	buf = auth->ah_cred.oa_base;
+	idx = 0;
+	buf[idx++] = time(NULL);
+	buf[idx++] = strlen(host);
+	memcpy(&buf[2], host, strlen(host));
+
+	idx += (strlen(host) + 3) & ~3;	
+	buf[idx++] = uid;
+	buf[idx++] = gid;
+	buf[idx++] = len;
+	while (len-- > 0) {
+		buf[idx++] = *groups++;
+	}
+
+
+	auth->ah_verf.oa_flavor = AUTH_NONE;
+	auth->ah_verf.oa_length = 0;
+	auth->ah_verf.oa_base = NULL;
+
+	auth->ah_private = NULL;
+
+	return auth;
+#endif
+}
+
+AUTH *libnfs_authunix_create_default(void)
+{
+	return libnfs_authunix_create("libnfs", getuid(), -1, 0, NULL);
+}
+
 void libnfs_auth_destroy(AUTH *auth)
 {
+	if (auth->ah_cred.oa_base) {
+		free(auth->ah_cred.oa_base);
+	}
+	if (auth->ah_verf.oa_base) {
+		free(auth->ah_verf.oa_base);
+	}
+	free(auth);
 }
 
