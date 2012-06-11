@@ -229,6 +229,9 @@ bool_t libnfs_xdr_u_int(XDR *xdrs, uint32_t *u);
 #define xdr_int libnfs_xdr_int
 bool_t libnfs_xdr_int(XDR *xdrs, int32_t *i);
 
+#define xdr_enum libnfs_xdr_enum
+bool_t libnfs_xdr_enum(XDR *xdrs, int32_t *e);
+
 #define xdr_void libnfs_xdr_void
 bool_t libnfs_xdr_void(void);
 
