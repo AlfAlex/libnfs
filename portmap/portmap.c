@@ -19,8 +19,7 @@
 #endif/*WIN32*/
 
 #include <stdio.h>
-#include <rpc/rpc.h>
-#include <rpc/xdr.h>
+#include "libnfs-xdr.h"
 #include "libnfs.h"
 #include "libnfs-raw.h"
 #include "libnfs-private.h"

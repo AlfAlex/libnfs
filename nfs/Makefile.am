@@ -15,6 +15,6 @@ $(nfs_GENERATED) : nfs-stamp
 nfs-stamp : nfs.x
 	rm -f $(nfs_GENERATED)
 	rpcgen -h @RPCGENFLAGS@ $< > libnfs-raw-nfs.h
-	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*nfs.h\"/#include \"libnfs-raw-nfs.h\"/" > libnfs-raw-nfs.c
+	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*nfs.h\"/#include \"libnfs-xdr.h\"\n#include \"libnfs-raw-nfs.h\"/" > libnfs-raw-nfs.c
 	touch nfs-stamp
 	

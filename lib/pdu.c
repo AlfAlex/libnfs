@@ -25,11 +25,12 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
 #include <errno.h>
-#include <rpc/rpc.h>
-#include <rpc/xdr.h>
-#include <rpc/rpc_msg.h>
 #include "slist.h"
+#include "libnfs-xdr.h"
 #include "libnfs.h"
 #include "libnfs-raw.h"
 #include "libnfs-private.h"
@@ -107,6 +108,7 @@ int rpc_queue_pdu(struct rpc_context *rpc, struct rpc_pdu *pdu)
 
 	/* for udp we dont queue, we just send it straight away */
 	if (rpc->is_udp != 0) {
+// XXX add a rpc->udp_dest_sock_size  and get rid of sys/socket.h and netinet/in.h
 		if (sendto(rpc->fd, rpc->encodebuf, size, MSG_DONTWAIT, rpc->udp_dest, sizeof(struct sockaddr_in)) < 0) {
 			rpc_set_error(rpc, "Sendto failed with errno %s", strerror(errno));
 			rpc_free_pdu(rpc, pdu);
