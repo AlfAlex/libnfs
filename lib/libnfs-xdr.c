@@ -287,8 +287,6 @@ AUTH *authnone_create(void)
 
 AUTH *libnfs_authunix_create(char *host, uint32_t uid, uint32_t gid, uint32_t len, uint32_t *groups)
 {
-return authnone_create();
-#if 0
 	AUTH *auth;
 	int size;
 	uint32_t *buf;
@@ -302,18 +300,17 @@ return authnone_create();
 
 	buf = auth->ah_cred.oa_base;
 	idx = 0;
-	buf[idx++] = time(NULL);
-	buf[idx++] = strlen(host);
+	buf[idx++] = htonl(time(NULL));
+	buf[idx++] = htonl(strlen(host));
 	memcpy(&buf[2], host, strlen(host));
 
-	idx += (strlen(host) + 3) & ~3;	
-	buf[idx++] = uid;
-	buf[idx++] = gid;
-	buf[idx++] = len;
+	idx += (strlen(host) + 3) >> 2;	
+	buf[idx++] = htonl(uid);
+	buf[idx++] = htonl(gid);
+	buf[idx++] = htonl(len);
 	while (len-- > 0) {
-		buf[idx++] = *groups++;
+		buf[idx++] = htonl(*groups++);
 	}
-
 
 	auth->ah_verf.oa_flavor = AUTH_NONE;
 	auth->ah_verf.oa_length = 0;
@@ -322,7 +319,6 @@ return authnone_create();
 	auth->ah_private = NULL;
 
 	return auth;
-#endif
 }
 
 AUTH *libnfs_authunix_create_default(void)
