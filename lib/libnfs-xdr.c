@@ -131,6 +131,11 @@ bool_t libnfs_xdr_enum(XDR *xdrs, int32_t *e)
 	return libnfs_xdr_u_int(xdrs, (uint32_t *)e);
 }
 
+bool_t libnfs_xdr_bool(XDR *xdrs, bool_t *b)
+{
+	return libnfs_xdr_u_int(xdrs, (uint32_t *)b);
+}
+
 bool_t libnfs_xdr_void(void)
 {
 	return TRUE;
