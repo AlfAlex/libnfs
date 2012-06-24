@@ -15,21 +15,16 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
 */
 /*
- * This file contains definitions for the built in XDR implementation.
- * This is a very limited XDR subset that can only marshal to/from a momory buffer,
- * i.e. xdrmem_create() buffers.
+ * This file contains definitions for the built in ZDR implementation.
+ * This is a very limited ZDR subset that can only marshal to/from a momory buffer,
+ * i.e. zdrmem_create() buffers.
  * It aims to be compatible with normal rpcgen generated functions.
  */
 
 #include "config.h"
 
-#ifdef USE_LOCAL_XDR
-
-#include <rpc/rpc.h>
-#include <rpc/xdr.h>
-#include <rpc/rpc_msg.h>
-
-#else
+#ifndef _LIBNFS_ZDR_H_
+#define _LIBNFS_ZDR_H_
 
 #include <stdio.h>
 #include <assert.h>
@@ -37,7 +32,7 @@
 #include <sys/types.h>
 
 #define _RPC_RPC_H 1
-#define _RPC_XDR_H 1
+#define _RPC_ZDR_H 1
 #define _RPC_AUTH_H 1
 
 /* we dont need these */
@@ -50,43 +45,43 @@ typedef void SVCXPRT;
 
 
 
-#define XDR_INLINE(...) NULL
-#define IXDR_PUT_U_LONG(...)		assert(0)
-#define IXDR_GET_U_LONG(...)		(assert(0), 0)
-#define IXDR_PUT_LONG(...)		assert(0)
-#define IXDR_GET_LONG(...)		(assert(0), 0)
-#define IXDR_PUT_BOOL(...)		assert(0)
-#define IXDR_GET_BOOL(...)		(assert(0), 0)
+#define ZDR_INLINE(...) NULL
+#define IZDR_PUT_U_LONG(...)		assert(0)
+#define IZDR_GET_U_LONG(...)		(assert(0), 0)
+#define IZDR_PUT_LONG(...)		assert(0)
+#define IZDR_GET_LONG(...)		(assert(0), 0)
+#define IZDR_PUT_BOOL(...)		assert(0)
+#define IZDR_GET_BOOL(...)		(assert(0), 0)
 
 #define TRUE		1
 #define FALSE		0
 
-enum xdr_op {
-	XDR_ENCODE = 0,
-	XDR_DECODE = 1
+enum zdr_op {
+	ZDR_ENCODE = 0,
+	ZDR_DECODE = 1
 };
 
-struct xdr_mem {
-       struct xdr_mem *next;
+struct zdr_mem {
+       struct zdr_mem *next;
        caddr_t buf;
        uint32_t size;
 };
 
-struct XDR {
-	enum xdr_op x_op;
+struct ZDR {
+	enum zdr_op x_op;
 	caddr_t buf;
 	int size;
 	int pos;
-	struct xdr_mem *mem;
+	struct zdr_mem *mem;
 };
-typedef struct XDR XDR;
+typedef struct ZDR ZDR;
 
 
 typedef uint32_t u_int;
 typedef uint32_t enum_t;
 typedef int bool_t;
 
-typedef int (*xdrproc_t) (XDR *, void *,...);
+typedef int (*zdrproc_t) (ZDR *, void *,...);
 
 /* XXX find out what we can get rid of */
 
@@ -142,7 +137,7 @@ struct accepted_reply {
 		} AR_versions;
 		struct {
 			caddr_t	where;
-			xdrproc_t proc;
+			zdrproc_t proc;
 		} AR_results;
 		/* and many other null cases */
 	} ru;
@@ -214,44 +209,44 @@ struct rpc_msg {
 
 
 
-#define xdrmem_create libnfs_xdrmem_create
-void libnfs_xdrmem_create(XDR *xdrs, const caddr_t addr, uint32_t size, enum xdr_op xop);
+#define zdrmem_create libnfs_zdrmem_create
+void libnfs_zdrmem_create(ZDR *zdrs, const caddr_t addr, uint32_t size, enum zdr_op xop);
 
-#define xdr_destroy libnfs_xdr_destroy
-void libnfs_xdr_destroy(XDR *xdrs);
+#define zdr_destroy libnfs_zdr_destroy
+void libnfs_zdr_destroy(ZDR *zdrs);
 
-#define xdr_bytes libnfs_xdr_bytes
-bool_t libnfs_xdr_bytes(XDR *xdrs, char **bufp, uint32_t *size, uint32_t *maxsize);
+#define zdr_bytes libnfs_zdr_bytes
+bool_t libnfs_zdr_bytes(ZDR *zdrs, char **bufp, uint32_t *size, uint32_t *maxsize);
 
-#define xdr_u_int libnfs_xdr_u_int
-bool_t libnfs_xdr_u_int(XDR *xdrs, uint32_t *u);
+#define zdr_u_int libnfs_zdr_u_int
+bool_t libnfs_zdr_u_int(ZDR *zdrs, uint32_t *u);
 
-#define xdr_int libnfs_xdr_int
-bool_t libnfs_xdr_int(XDR *xdrs, int32_t *i);
+#define zdr_int libnfs_zdr_int
+bool_t libnfs_zdr_int(ZDR *zdrs, int32_t *i);
 
-#define xdr_enum libnfs_xdr_enum
-bool_t libnfs_xdr_enum(XDR *xdrs, int32_t *e);
+#define zdr_enum libnfs_zdr_enum
+bool_t libnfs_zdr_enum(ZDR *zdrs, int32_t *e);
 
-#define xdr_bool libnfs_xdr_bool
-bool_t libnfs_xdr_bool(XDR *xdrs, bool_t *b);
+#define zdr_bool libnfs_zdr_bool
+bool_t libnfs_zdr_bool(ZDR *zdrs, bool_t *b);
 
-#define xdr_void libnfs_xdr_void
-bool_t libnfs_xdr_void(void);
+#define zdr_void libnfs_zdr_void
+bool_t libnfs_zdr_void(void);
 
-#define xdr_setpos libnfs_xdr_setpos
-bool_t libnfs_xdr_setpos(XDR *xdrs, uint32_t pos);
+#define zdr_setpos libnfs_zdr_setpos
+bool_t libnfs_zdr_setpos(ZDR *zdrs, uint32_t pos);
 
-#define xdr_getpos libnfs_xdr_getpos
-uint32_t libnfs_xdr_getpos(XDR *xdrs);
+#define zdr_getpos libnfs_zdr_getpos
+uint32_t libnfs_zdr_getpos(ZDR *zdrs);
 
-#define xdr_free libnfs_xdr_free
-void libnfs_xdr_free(xdrproc_t proc, char *objp);
+#define zdr_free libnfs_zdr_free
+void libnfs_zdr_free(zdrproc_t proc, char *objp);
 
-#define xdr_callmsg libnfs_xdr_callmsg
-bool_t libnfs_xdr_callmsg(XDR *xdrs, struct rpc_msg *msg);
+#define zdr_callmsg libnfs_zdr_callmsg
+bool_t libnfs_zdr_callmsg(ZDR *zdrs, struct rpc_msg *msg);
 
-#define xdr_replymsg libnfs_xdr_replymsg
-bool_t libnfs_xdr_replymsg(XDR *xdrs, struct rpc_msg *msg);
+#define zdr_replymsg libnfs_zdr_replymsg
+bool_t libnfs_zdr_replymsg(ZDR *zdrs, struct rpc_msg *msg);
 
 #define authnone_create libnfs_authnone_create
 AUTH *libnfs_authnone_create(void);
@@ -264,6 +259,5 @@ AUTH *libnfs_authunix_create_default(void);
 
 #define auth_destroy libnfs_auth_destroy
 void libnfs_auth_destroy(AUTH *auth);
-
 
 #endif

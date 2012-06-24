@@ -25,7 +25,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "slist.h"
-#include "libnfs-xdr.h"
+#include "libnfs-zdr.h"
 #include "libnfs.h"
 #include "libnfs-raw.h"
 #include "libnfs-private.h"

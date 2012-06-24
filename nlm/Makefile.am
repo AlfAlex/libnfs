@@ -14,7 +14,7 @@ libnlm_la_SOURCES = \
 $(nlm_GENERATED) : nlm-stamp
 nlm-stamp : nlm.x
 	rm -f $(nlm_GENERATED)
-	rpcgen -h @RPCGENFLAGS@ $< > libnfs-raw-nlm.h
-	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*nlm.h\"/#include \"libnfs-xdr.h\"\n#include \"libnfs-raw-nlm.h\"/" > libnfs-raw-nlm.c
+	rpcgen -h @RPCGENFLAGS@ $< | sed -e "s/#include <rpc\/rpc.h>//" | sed -e "s/xdr/zdr/g" -e "s/XDR/ZDR/g" > libnfs-raw-nlm.h
+	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*nlm.h\"/#include \"libnfs-xdr.h\"\n#include \"libnfs-raw-nlm.h\"/" -e "s/xdr/zdr/g" -e "s/XDR/ZDR/g"  > libnfs-raw-nlm.c
 	touch nlm-stamp
 	

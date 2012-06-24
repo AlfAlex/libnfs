@@ -14,7 +14,7 @@ librquota_la_SOURCES = \
 $(rquota_GENERATED) : rquota-stamp
 rquota-stamp : rquota.x
 	rm -f $(rquota_GENERATED)
-	rpcgen -h @RPCGENFLAGS@ $< > libnfs-raw-rquota.h
-	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*rquota.h\"/#include \"libnfs-xdr.h\"\n#include \"libnfs-raw-rquota.h\"/" > libnfs-raw-rquota.c
+	rpcgen -h @RPCGENFLAGS@ $< | sed -e "s/#include <rpc\/rpc.h>//" | sed -e "s/xdr/zdr/g" -e "s/XDR/ZDR/g" > libnfs-raw-rquota.h
+	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*rquota.h\"/#include \"libnfs-xdr.h\"\n#include \"libnfs-raw-rquota.h\"/" -e "s/xdr/zdr/g" -e "s/XDR/ZDR/g"  > libnfs-raw-rquota.c
 	touch rquota-stamp
 	

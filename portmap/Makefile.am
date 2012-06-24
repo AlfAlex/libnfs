@@ -14,7 +14,7 @@ libportmap_la_SOURCES = \
 $(portmap_GENERATED) : portmap-stamp
 portmap-stamp : portmap.x
 	rm -f $(portmap_GENERATED)
-	rpcgen -h @RPCGENFLAGS@ $< | sed -e "s/#include <rpc\/rpc.h>//" > libnfs-raw-portmap.h
-	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*portmap.h\"/#include \"libnfs-xdr.h\"\n#include \"libnfs-raw-portmap.h\"/" > libnfs-raw-portmap.c
+	rpcgen -h @RPCGENFLAGS@ $< | sed -e "s/#include <rpc\/rpc.h>//" | sed -e "s/xdr/zdr/g" -e "s/XDR/ZDR/g" > libnfs-raw-portmap.h
+	rpcgen -c @RPCGENFLAGS@ $< | sed -e "s/#include \".*portmap.h\"/#include \"libnfs-zdr.h\"\n#include \"libnfs-raw-portmap.h\"/" -e "s/xdr/zdr/g" -e "s/XDR/ZDR/g" > libnfs-raw-portmap.c
 	touch portmap-stamp
 	

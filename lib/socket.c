@@ -40,7 +40,7 @@
 #include <sys/sockio.h>
 #endif
 #include <sys/types.h>
-#include "libnfs-xdr.h"
+#include "libnfs-zdr.h"
 #include "libnfs.h"
 #include "libnfs-raw.h"
 #include "libnfs-private.h"
