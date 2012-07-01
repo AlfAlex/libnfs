@@ -215,9 +215,33 @@ bool_t libnfs_zdr_opaque(ZDR *zdrs, char *objp, uint32_t size)
 
 bool_t libnfs_zdr_string(ZDR *zdrs, char **strp, uint32_t maxsize)
 {
-	uint32_t size = maxsize;
+	uint32_t size;
 
-	return libnfs_zdr_bytes(zdrs, strp, &size, maxsize);
+	if (zdrs->x_op == ZDR_ENCODE) {
+		size = strlen(*strp);
+	}
+
+	if (!libnfs_zdr_u_int(zdrs, &size)) {
+		return FALSE;
+	}
+
+	if (zdrs->pos + size > zdrs->size) {
+		return FALSE;
+	}
+
+	switch (zdrs->x_op) {
+	case ZDR_ENCODE:
+		return libnfs_zdr_opaque(zdrs, *strp, size);
+	case ZDR_DECODE:
+		*strp = zdr_malloc(zdrs, size + 1);
+		if (*strp == NULL) {
+			return FALSE;
+		}
+		*strp[size] = 0;
+		return libnfs_zdr_opaque(zdrs, *strp, size);
+	}
+
+	return FALSE;
 }
 
 bool_t libnfs_zdr_array(ZDR *zdrs, char **arrp, uint32_t *size, uint32_t maxsize, uint32_t elsize, zdrproc_t proc)
