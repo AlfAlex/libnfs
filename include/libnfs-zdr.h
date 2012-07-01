@@ -216,7 +216,7 @@ void libnfs_zdrmem_create(ZDR *zdrs, const caddr_t addr, uint32_t size, enum zdr
 void libnfs_zdr_destroy(ZDR *zdrs);
 
 #define zdr_bytes libnfs_zdr_bytes
-bool_t libnfs_zdr_bytes(ZDR *zdrs, char **bufp, uint32_t *size, uint32_t *maxsize);
+bool_t libnfs_zdr_bytes(ZDR *zdrs, char **bufp, uint32_t *size, uint32_t maxsize);
 
 #define zdr_u_int libnfs_zdr_u_int
 bool_t libnfs_zdr_u_int(ZDR *zdrs, uint32_t *u);
@@ -238,6 +238,9 @@ bool_t libnfs_zdr_pointer(ZDR *zdrs, char **objp, uint32_t size, zdrproc_t proc)
 
 #define zdr_opaque libnfs_zdr_opaque
 bool_t libnfs_zdr_opaque(ZDR *zdrs, char *objp, uint32_t size);
+
+#define zdr_string libnfs_zdr_string
+bool_t libnfs_zdr_string(ZDR *zdrs, char **strp, uint32_t maxsize);
 
 #define zdr_setpos libnfs_zdr_setpos
 bool_t libnfs_zdr_setpos(ZDR *zdrs, uint32_t pos);

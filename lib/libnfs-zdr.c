@@ -91,7 +91,7 @@ bool_t libnfs_zdr_u_int(ZDR *zdrs, uint32_t *u)
 	return FALSE;
 }
 
-bool_t libnfs_zdr_bytes(ZDR *zdrs, char **bufp, uint32_t *size, uint32_t *maxsize)
+bool_t libnfs_zdr_bytes(ZDR *zdrs, char **bufp, uint32_t *size, uint32_t maxsize)
 {
 	if (!libnfs_zdr_u_int(zdrs, size)) {
 		return FALSE;
@@ -179,6 +179,13 @@ bool_t libnfs_zdr_opaque(ZDR *zdrs, char *objp, uint32_t size)
 	}
 
 	return FALSE;
+}
+
+bool_t libnfs_zdr_string(ZDR *zdrs, char **strp, uint32_t maxsize)
+{
+	uint32_t size = maxsize;
+
+	return libnfs_zdr_string(zdrs, strp, &size, maxsize);
 }
 
 void libnfs_zdr_free(zdrproc_t proc, char *objp)
