@@ -236,6 +236,9 @@ bool_t libnfs_zdr_void(void);
 #define zdr_pointer libnfs_zdr_pointer
 bool_t libnfs_zdr_pointer(ZDR *zdrs, char **objp, uint32_t size, zdrproc_t proc);
 
+#define zdr_opaque libnfs_zdr_opaque
+bool_t libnfs_zdr_opaque(ZDR *zdrs, char *objp, uint32_t size);
+
 #define zdr_setpos libnfs_zdr_setpos
 bool_t libnfs_zdr_setpos(ZDR *zdrs, uint32_t pos);
 

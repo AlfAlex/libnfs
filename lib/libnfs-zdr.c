@@ -163,6 +163,24 @@ bool_t libnfs_zdr_pointer(ZDR *zdrs, char **objp, uint32_t size, zdrproc_t proc)
 	return proc(zdrs, *objp);
 }
 
+bool_t libnfs_zdr_opaque(ZDR *zdrs, char *objp, uint32_t size)
+{
+	switch (zdrs->x_op) {
+	case ZDR_ENCODE:
+		memcpy(&zdrs->buf[zdrs->pos], objp, size);
+		zdrs->pos += size;
+		zdrs->pos = (zdrs->pos + 3) & ~3;
+		return TRUE;
+	case ZDR_DECODE:
+		memcpy(objp, &zdrs->buf[zdrs->pos], size);
+		zdrs->pos += size;
+		zdrs->pos = (zdrs->pos + 3) & ~3;
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 void libnfs_zdr_free(zdrproc_t proc, char *objp)
 {
 }
