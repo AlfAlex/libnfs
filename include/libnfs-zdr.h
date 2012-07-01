@@ -79,7 +79,7 @@ typedef struct ZDR ZDR;
 
 typedef uint32_t u_int;
 typedef uint32_t enum_t;
-typedef int bool_t;
+typedef uint32_t bool_t;
 
 typedef int (*zdrproc_t) (ZDR *, void *,...);
 
@@ -232,6 +232,9 @@ bool_t libnfs_zdr_bool(ZDR *zdrs, bool_t *b);
 
 #define zdr_void libnfs_zdr_void
 bool_t libnfs_zdr_void(void);
+
+#define zdr_pointer libnfs_zdr_pointer
+bool_t libnfs_zdr_pointer(ZDR *zdrs, char **objp, uint32_t size, zdrproc_t proc);
 
 #define zdr_setpos libnfs_zdr_setpos
 bool_t libnfs_zdr_setpos(ZDR *zdrs, uint32_t pos);

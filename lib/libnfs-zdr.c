@@ -141,6 +141,28 @@ bool_t libnfs_zdr_void(void)
 	return TRUE;
 }
 
+bool_t libnfs_zdr_pointer(ZDR *zdrs, char **objp, uint32_t size, zdrproc_t proc)
+{
+	bool_t more_data;
+
+	if (libnfs_zdr_bool(zdrs, &more_data)) {
+		return FALSE;
+	}
+	if (more_data == 0) {
+		*objp = NULL;
+		return TRUE;
+	}
+
+	if (zdrs->x_op == ZDR_DECODE) {
+		*objp = zdr_malloc(zdrs, size);
+		if (*objp == NULL) {
+			return FALSE;
+		}
+		memset(*objp, 0, size);
+	}
+	return proc(zdrs, *objp);
+}
+
 void libnfs_zdr_free(zdrproc_t proc, char *objp)
 {
 }
