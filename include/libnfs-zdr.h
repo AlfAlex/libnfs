@@ -224,6 +224,12 @@ bool_t libnfs_zdr_u_int(ZDR *zdrs, uint32_t *u);
 #define zdr_int libnfs_zdr_int
 bool_t libnfs_zdr_int(ZDR *zdrs, int32_t *i);
 
+#define zdr_u_quad_t libnfs_zdr_u_quad_t
+bool_t libnfs_zdr_u_quad_t(ZDR *zdrs, uint64_t *u);
+
+#define zdr_quad_t libnfs_zdr_quad_t
+bool_t libnfs_zdr_quad_t(ZDR *zdrs, int64_t *i);
+
 #define zdr_enum libnfs_zdr_enum
 bool_t libnfs_zdr_enum(ZDR *zdrs, int32_t *e);
 

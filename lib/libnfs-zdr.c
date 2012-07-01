@@ -91,6 +91,43 @@ bool_t libnfs_zdr_u_int(ZDR *zdrs, uint32_t *u)
 	return FALSE;
 }
 
+bool_t libnfs_zdr_int(ZDR *zdrs, int32_t *i)
+{
+	return libnfs_zdr_u_int(zdrs, (uint32_t *)i);
+}
+
+bool_t libnfs_zdr_u_quad_t(ZDR *zdrs, uint64_t *u)
+{
+	if (zdrs->pos + 8 > zdrs->size) {
+		return FALSE;
+	}
+
+	switch (zdrs->x_op) {
+	case ZDR_ENCODE:
+		*(uint32_t *)&zdrs->buf[zdrs->pos] = htonl((*u >> 32));
+		zdrs->pos += 4;
+		*(uint32_t *)&zdrs->buf[zdrs->pos] = htonl((*u & 0xffffffff));
+		zdrs->pos += 4;
+		return TRUE;
+		break;
+	case ZDR_DECODE:
+		*u = ntohl(*(uint32_t *)&zdrs->buf[zdrs->pos]);
+		zdrs->pos += 4;
+		*u <<= 32;
+		*u |= ntohl(*(uint32_t *)&zdrs->buf[zdrs->pos]);
+		zdrs->pos += 4;
+		return TRUE;
+		break;
+	}
+
+	return FALSE;
+}
+
+bool_t libnfs_zdr_quad_t(ZDR *zdrs, int64_t *i)
+{
+	return libnfs_zdr_u_quad_t(zdrs, (uint64_t *)i);
+}
+
 bool_t libnfs_zdr_bytes(ZDR *zdrs, char **bufp, uint32_t *size, uint32_t maxsize)
 {
 	if (!libnfs_zdr_u_int(zdrs, size)) {
@@ -120,11 +157,6 @@ bool_t libnfs_zdr_bytes(ZDR *zdrs, char **bufp, uint32_t *size, uint32_t maxsize
 	return FALSE;
 }
 
-
-bool_t libnfs_zdr_int(ZDR *zdrs, int32_t *i)
-{
-	return libnfs_zdr_u_int(zdrs, (uint32_t *)i);
-}
 
 bool_t libnfs_zdr_enum(ZDR *zdrs, int32_t *e)
 {
