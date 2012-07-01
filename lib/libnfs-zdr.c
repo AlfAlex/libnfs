@@ -177,7 +177,9 @@ bool_t libnfs_zdr_pointer(ZDR *zdrs, char **objp, uint32_t size, zdrproc_t proc)
 {
 	bool_t more_data;
 
-	if (libnfs_zdr_bool(zdrs, &more_data)) {
+	more_data = (*objp != NULL);
+
+	if (!libnfs_zdr_bool(zdrs, &more_data)) {
 		return FALSE;
 	}
 	if (more_data == 0) {
@@ -237,7 +239,7 @@ bool_t libnfs_zdr_string(ZDR *zdrs, char **strp, uint32_t maxsize)
 		if (*strp == NULL) {
 			return FALSE;
 		}
-		*strp[size] = 0;
+		(*strp)[size] = 0;
 		return libnfs_zdr_opaque(zdrs, *strp, size);
 	}
 
