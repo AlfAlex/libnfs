@@ -185,7 +185,7 @@ bool_t libnfs_zdr_string(ZDR *zdrs, char **strp, uint32_t maxsize)
 {
 	uint32_t size = maxsize;
 
-	return libnfs_zdr_string(zdrs, strp, &size, maxsize);
+	return libnfs_zdr_bytes(zdrs, strp, &size, maxsize);
 }
 
 void libnfs_zdr_free(zdrproc_t proc, char *objp)
