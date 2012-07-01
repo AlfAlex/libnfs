@@ -248,6 +248,9 @@ bool_t libnfs_zdr_opaque(ZDR *zdrs, char *objp, uint32_t size);
 #define zdr_string libnfs_zdr_string
 bool_t libnfs_zdr_string(ZDR *zdrs, char **strp, uint32_t maxsize);
 
+#define zdr_array libnfs_zdr_array
+bool_t libnfs_zdr_array(ZDR *zdrs, char **arrp, uint32_t *size, uint32_t maxsize, uint32_t elsize, zdrproc_t proc);
+
 #define zdr_setpos libnfs_zdr_setpos
 bool_t libnfs_zdr_setpos(ZDR *zdrs, uint32_t pos);
 

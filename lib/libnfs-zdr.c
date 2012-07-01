@@ -220,6 +220,34 @@ bool_t libnfs_zdr_string(ZDR *zdrs, char **strp, uint32_t maxsize)
 	return libnfs_zdr_bytes(zdrs, strp, &size, maxsize);
 }
 
+bool_t libnfs_zdr_array(ZDR *zdrs, char **arrp, uint32_t *size, uint32_t maxsize, uint32_t elsize, zdrproc_t proc)
+{
+	int  i;
+
+	if (!libnfs_zdr_u_int(zdrs, size)) {
+		return FALSE;
+	}
+
+	if (zdrs->pos + *size * elsize > zdrs->size) {
+		return FALSE;
+	}
+
+	if (zdrs->x_op == ZDR_DECODE) {
+		*arrp = zdr_malloc(zdrs, *size * elsize);
+		if (*arrp == NULL) {
+			return FALSE;
+		}
+		memset(*arrp, 0, *size * elsize);
+	}
+
+	for (i = 0; i < *size; i++) {
+		if (proc(zdrs, *arrp + i * elsize)) {
+			return FALSE;
+		}
+	}
+	return TRUE;
+}
+
 void libnfs_zdr_free(zdrproc_t proc, char *objp)
 {
 }
