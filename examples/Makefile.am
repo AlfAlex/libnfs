@@ -8,7 +8,7 @@ AM_CPPFLAGS = \
 	-I../portmap \
 	"-D_U_=__attribute__((unused))"
 
-AM_LDFLAGS = --static ../lib/*.o ../nfs/*.o ../mount/*.o ../portmap/*.o ../rquota/*.o
+AM_LDFLAGS = ../lib/.libs/libnfs.la
 
 nfsclient_async_SOURCES = nfsclient-async.c
 

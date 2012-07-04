@@ -42,7 +42,7 @@ struct nfs_list_data {
        struct nfs_server_list *srvrs;
 };
 
-static void local_free_nfs_srvr_list(struct nfs_server_list *srv)
+void free_nfs_srvr_list(struct nfs_server_list *srv)
 {
 	while (srv != NULL) {
 		struct nfs_server_list *next = srv->next;
@@ -220,7 +220,7 @@ int main(int argc _U_, char *argv[] _U_)
 	for (srvr=data.srvrs; srvr; srvr = srvr->next) {
 		printf("NFS SERVER @ %s\n", srvr->addr);
 	}
-	local_free_nfs_srvr_list(data.srvrs);
+	free_nfs_srvr_list(data.srvrs);
 
 	rpc_destroy_context(rpc);
 	rpc=NULL;
